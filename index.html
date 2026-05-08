@@ -1,614 +1,464 @@
-import React, { useState, useEffect } from 'react';
-import { Play, XCircle, Award, Clock, BookOpen, Zap, Trophy, Star } from 'lucide-react';
-
-// --- BASE DE DATOS DE CONTENIDO (CURRICULUM) ---
-const curriculum = [
-  {
-    id: 'g1-3',
-    title: 'Grados 1º a 3º - Exploradores',
-    subtitle: 'Vocabulario básico, saludos, colores y animales.',
-    color: 'bg-blue-500',
-    activities: [
-      {
-        type: 'matching',
-        instruction: 'Une la palabra en inglés con su significado en español.',
-        pairs: [
-          { en: 'Hello', es: 'Hola' },
-          { en: 'Red', es: 'Rojo' },
-          { en: 'Dog', es: 'Perro' },
-          { en: 'Cat', es: 'Gato' },
-          { en: 'Apple', es: 'Manzana' }
-        ]
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Selecciona la palabra correcta para completar la frase.',
-        sentence: 'Good _, teacher!',
-        options: ['morning', 'night', 'moon', 'sun'],
-        correct: 'morning'
-      },
-      {
-        type: 'matching',
-        instruction: 'Une los números.',
-        pairs: [
-          { en: 'One', es: 'Uno' },
-          { en: 'Two', es: 'Dos' },
-          { en: 'Three', es: 'Tres' },
-          { en: 'Four', es: 'Cuatro' },
-          { en: 'Five', es: 'Cinco' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'g4-5',
-    title: 'Grados 4º a 5º - Principiantes',
-    subtitle: 'Verbo To Be, rutinas, familia y partes del cuerpo.',
-    color: 'bg-green-500',
-    activities: [
-      {
-        type: 'fill-blank',
-        instruction: 'Completa con el Verbo To Be correcto.',
-        sentence: 'She _ my sister.',
-        options: ['am', 'is', 'are', 'be'],
-        correct: 'is'
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Rutinas diarias: Completa la frase.',
-        sentence: 'I _ breakfast at 7:00 AM.',
-        options: ['eat', 'play', 'sleep', 'go'],
-        correct: 'eat'
-      },
-      {
-        type: 'matching',
-        instruction: 'Relaciona la palabra de la familia.',
-        pairs: [
-          { en: 'Mother', es: 'Madre' },
-          { en: 'Father', es: 'Padre' },
-          { en: 'Brother', es: 'Hermano' },
-          { en: 'Sister', es: 'Hermana' },
-          { en: 'Grandfather', es: 'Abuelo' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'g6-7',
-    title: 'Grados 6º a 7º - Intermedios',
-    subtitle: 'Pasado simple, futuro (will/going to), comparativos.',
-    color: 'bg-yellow-500',
-    activities: [
-      {
-        type: 'matching',
-        instruction: 'Une el verbo en presente con su forma en pasado (Irregulares).',
-        pairs: [
-          { en: 'Go', es: 'Went' },
-          { en: 'See', es: 'Saw' },
-          { en: 'Eat', es: 'Ate' },
-          { en: 'Buy', es: 'Bought' },
-          { en: 'Think', es: 'Thought' }
-        ]
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Completa usando el comparativo correcto.',
-        sentence: 'My car is _ than yours.',
-        options: ['fast', 'faster', 'fastest', 'more fast'],
-        correct: 'faster'
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Completa la frase en futuro.',
-        sentence: 'Tomorrow, I _ to the beach.',
-        options: ['will go', 'went', 'going', 'goes'],
-        correct: 'will go'
-      }
-    ]
-  },
-  {
-    id: 'g8-9',
-    title: 'Grados 8º a 9º - Avanzados',
-    subtitle: 'Presente perfecto, condicionales, modales.',
-    color: 'bg-orange-500',
-    activities: [
-      {
-        type: 'fill-blank',
-        instruction: 'Completa con Presente Perfecto.',
-        sentence: 'I have never _ to Paris.',
-        options: ['be', 'was', 'been', 'being'],
-        correct: 'been'
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Primer Condicional: Completa.',
-        sentence: 'If it rains, we _ at home.',
-        options: ['stay', 'will stay', 'stayed', 'staying'],
-        correct: 'will stay'
-      },
-      {
-        type: 'matching',
-        instruction: 'Relaciona el verbo modal con su uso.',
-        pairs: [
-          { en: 'Must', es: 'Obligación fuerte' },
-          { en: 'Should', es: 'Consejo' },
-          { en: 'Can', es: 'Habilidad' },
-          { en: 'May', es: 'Permiso/Posibilidad' },
-          { en: 'Might', es: 'Posibilidad remota' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'g10-11',
-    title: 'Grados 10º a 11º - Expertos',
-    subtitle: 'Voz pasiva, Reported Speech, Phrasal Verbs.',
-    color: 'bg-purple-600',
-    activities: [
-      {
-        type: 'matching',
-        instruction: 'Une el Phrasal Verb con su significado.',
-        pairs: [
-          { en: 'Give up', es: 'Rendirse' },
-          { en: 'Look for', es: 'Buscar' },
-          { en: 'Take off', es: 'Despegar / Quitarse' },
-          { en: 'Wake up', es: 'Despertarse' },
-          { en: 'Turn on', es: 'Encender' }
-        ]
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Voz Pasiva: Completa la frase.',
-        sentence: 'The book _ written by Gabriel Garcia Marquez.',
-        options: ['was', 'is', 'has', 'were'],
-        correct: 'was'
-      },
-      {
-        type: 'fill-blank',
-        instruction: 'Tercer Condicional (Third Conditional).',
-        sentence: 'If I had studied harder, I _ passed the exam.',
-        options: ['would have', 'will have', 'had', 'would'],
-        correct: 'would have'
-      }
-    ]
-  }
-];
-
-// Generador de preguntas infinitas para rellenar tiempo
-const generateInfiniteQuestions = () => {
-    let allQuestions = [];
-    curriculum.forEach(level => {
-        level.activities.forEach(act => {
-            if (act.type === 'fill-blank') {
-                allQuestions.push({...act, levelName: level.title});
-            } else if (act.type === 'matching') {
-                // Convertir matching en preguntas de opción múltiple para el modo infinito
-                act.pairs.forEach(pair => {
-                    let wrongOptions = act.pairs.filter(p => p.en !== pair.en).map(p => p.es).slice(0,3);
-                    allQuestions.push({
-                        type: 'fill-blank',
-                        instruction: `¿Qué significa "${pair.en}"?`,
-                        sentence: `"${pair.en}" significa _`,
-                        options: [pair.es, ...wrongOptions].sort(() => Math.random() - 0.5),
-                        correct: pair.es,
-                        levelName: level.title
-                    });
-                });
-            }
-        });
-    });
-    return allQuestions.sort(() => Math.random() - 0.5); // Shuffle
-};
-
-
-// --- COMPONENTES DE JUEGO ---
-
-const MatchingGame = ({ activity, onComplete }) => {
-  const [leftItems, setLeftItems] = useState([]);
-  const [rightItems, setRightItems] = useState([]);
-  const [selectedLeft, setSelectedLeft] = useState(null);
-  const [selectedRight, setSelectedRight] = useState(null);
-  const [matched, setMatched] = useState([]);
-  const [errorFlash, setErrorFlash] = useState(false);
-
-  useEffect(() => {
-    // Shuffle pairs for left and right columns independently
-    const shuffledLeft = [...activity.pairs].sort(() => Math.random() - 0.5);
-    const shuffledRight = [...activity.pairs].sort(() => Math.random() - 0.5);
-    setLeftItems(shuffledLeft);
-    setRightItems(shuffledRight);
-    setMatched([]);
-    setSelectedLeft(null);
-    setSelectedRight(null);
-  }, [activity]);
-
-  const handleSelectLeft = (item) => {
-    if (matched.includes(item.en)) return;
-    setSelectedLeft(item);
-    checkMatch(item, selectedRight);
-  };
-
-  const handleSelectRight = (item) => {
-    if (matched.find(m => m === activity.pairs.find(p => p.es === item.es).en)) return;
-    setSelectedRight(item);
-    checkMatch(selectedLeft, item);
-  };
-
-  const checkMatch = (left, right) => {
-    if (left && right) {
-      const isCorrect = activity.pairs.some(p => p.en === left.en && p.es === right.es);
-      if (isCorrect) {
-        setMatched([...matched, left.en]);
-        setSelectedLeft(null);
-        setSelectedRight(null);
-        if (matched.length + 1 === activity.pairs.length) {
-          setTimeout(onComplete, 1000);
-        }
-      } else {
-        setErrorFlash(true);
-        setTimeout(() => {
-          setSelectedLeft(null);
-          setSelectedRight(null);
-          setErrorFlash(false);
-        }, 800);
-      }
-    }
-  };
-
-  return (
-    <div className="w-full flex flex-col items-center">
-      <p className="text-lg text-slate-600 mb-6 font-medium text-center">{activity.instruction}</p>
-      
-      <div className={`flex w-full justify-between gap-4 transition-all ${errorFlash ? 'animate-shake' : ''}`}>
-        {/* Left Column */}
-        <div className="flex-1 flex flex-col gap-3">
-          {leftItems.map((item, idx) => {
-            const isMatched = matched.includes(item.en);
-            const isSelected = selectedLeft?.en === item.en;
-            return (
-              <button
-                key={`l-${idx}`}
-                onClick={() => handleSelectLeft(item)}
-                disabled={isMatched}
-                className={`p-4 rounded-xl text-center font-bold text-lg transition-all duration-300 shadow-sm border-2
-                  ${isMatched ? 'bg-green-100 border-green-500 text-green-700 opacity-50 scale-95' 
-                  : isSelected ? 'bg-blue-100 border-blue-500 text-blue-700 scale-105 shadow-md' 
-                  : 'bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-slate-50'}`}
-              >
-                {item.en}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Right Column */}
-        <div className="flex-1 flex flex-col gap-3">
-          {rightItems.map((item, idx) => {
-            // Find corresponding English word to check if matched
-            const engWord = activity.pairs.find(p => p.es === item.es).en;
-            const isMatched = matched.includes(engWord);
-            const isSelected = selectedRight?.es === item.es;
-            return (
-              <button
-                key={`r-${idx}`}
-                onClick={() => handleSelectRight(item)}
-                disabled={isMatched}
-                className={`p-4 rounded-xl text-center font-bold text-lg transition-all duration-300 shadow-sm border-2
-                  ${isMatched ? 'bg-green-100 border-green-500 text-green-700 opacity-50 scale-95' 
-                  : isSelected ? 'bg-purple-100 border-purple-500 text-purple-700 scale-105 shadow-md' 
-                  : 'bg-white border-slate-200 text-slate-700 hover:border-purple-300 hover:bg-slate-50'}`}
-              >
-                {item.es}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const FillBlankGame = ({ activity, onComplete }) => {
-  const [selectedWord, setSelectedWord] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [shuffledOptions, setShuffledOptions] = useState([]);
-
-  useEffect(() => {
-    setShuffledOptions([...activity.options].sort(() => Math.random() - 0.5));
-    setSelectedWord(null);
-    setIsCorrect(null);
-  }, [activity]);
-
-  const handleSelectWord = (word) => {
-    setSelectedWord(word);
-    if (word === activity.correct) {
-      setIsCorrect(true);
-      setTimeout(onComplete, 1500);
-    } else {
-      setIsCorrect(false);
-      setTimeout(() => {
-          setSelectedWord(null);
-          setIsCorrect(null);
-      }, 1000);
-    }
-  };
-
-  const parts = activity.sentence.split('_');
-
-  return (
-    <div className="w-full flex flex-col items-center">
-      <p className="text-lg text-slate-600 mb-8 font-medium text-center">{activity.instruction}</p>
-      
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full mb-8 text-center">
-        <p className="text-2xl font-bold text-slate-800 leading-relaxed flex items-center justify-center flex-wrap gap-2">
-          {parts[0]}
-          <span className={`inline-block min-w-[120px] px-4 py-2 border-b-4 rounded-lg mx-2 transition-all duration-300
-            ${selectedWord === null ? 'border-slate-300 bg-slate-50 text-slate-300' : 
-              isCorrect ? 'border-green-500 bg-green-100 text-green-700' : 
-              isCorrect === false ? 'border-red-500 bg-red-100 text-red-700 animate-shake' : 
-              'border-blue-500 bg-blue-50 text-blue-700'}`}>
-            {selectedWord || '?'}
-          </span>
-          {parts[1]}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
-        {shuffledOptions.map((opt, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleSelectWord(opt)}
-            disabled={isCorrect}
-            className={`py-4 px-2 rounded-xl font-bold text-lg transition-all shadow-sm border-2
-              ${selectedWord === opt 
-                ? (isCorrect ? 'bg-green-500 text-white border-green-600 scale-105' : 'bg-red-500 text-white border-red-600')
-                : 'bg-white border-slate-200 text-slate-700 hover:border-blue-400 hover:text-blue-600 hover:-translate-y-1'}`}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-
-// --- APLICACIÓN PRINCIPAL ---
-
-export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('menu'); // 'menu', 'module', 'infinite', 'end'
-  const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
-  const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [infiniteQuestions, setInfiniteQuestions] = useState([]);
-  
-  // Timer global
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeElapsed(prev => prev + 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
-  const startModule = (index) => {
-    setCurrentModuleIndex(index);
-    setCurrentActivityIndex(0);
-    setCurrentScreen('module');
-  };
-
-  const startInfiniteMode = () => {
-    setInfiniteQuestions(generateInfiniteQuestions());
-    setCurrentActivityIndex(0);
-    setCurrentScreen('infinite');
-  };
-
-  const handleActivityComplete = () => {
-    setScore(prev => prev + 100);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Master Journey</title>
     
-    if (currentScreen === 'module') {
-      const currentModule = curriculum[currentModuleIndex];
-      if (currentActivityIndex + 1 < currentModule.activities.length) {
-        setCurrentActivityIndex(prev => prev + 1);
-      } else {
-        setCurrentScreen('endModule');
-      }
-    } else if (currentScreen === 'infinite') {
-      // Bucle infinito, solo avanza
-      setCurrentActivityIndex(prev => prev + 1);
-    }
-  };
+    <!-- Carga de Tailwind CSS para los estilos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carga de React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Carga de Babel para que el navegador entienda JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  const returnToMenu = () => {
-    setCurrentScreen('menu');
-  };
-
-  // Vistas
-  if (currentScreen === 'menu') {
-    return (
-      <div className="min-h-screen bg-slate-50 p-6 font-sans">
-        <header className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-2">
-              <BookOpen className="text-blue-600" size={32} />
-              English Master Journey
-            </h1>
-            <p className="text-slate-500 font-medium mt-1">Currículo Completo: Primaria a Bachillerato</p>
-          </div>
-          <div className="flex gap-4">
-            <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 flex items-center gap-2 font-bold text-slate-700">
-              <Award className="text-yellow-500" />
-              {score} Pts
-            </div>
-            <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 flex items-center gap-2 font-bold text-slate-700">
-              <Clock className="text-blue-500" />
-              {formatTime(timeElapsed)}
-            </div>
-          </div>
-        </header>
-
-        <main className="max-w-4xl mx-auto">
-          <h2 className="text-xl font-bold text-slate-700 mb-6">Selecciona el nivel a impartir:</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {curriculum.map((mod, idx) => (
-              <button
-                key={mod.id}
-                onClick={() => startModule(idx)}
-                className="group relative bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 text-left overflow-hidden flex flex-col h-full"
-              >
-                <div className={`absolute top-0 left-0 w-full h-2 ${mod.color}`}></div>
-                <h3 className="text-xl font-bold text-slate-800 mt-2 mb-2">{mod.title}</h3>
-                <p className="text-slate-500 text-sm mb-6 flex-grow">{mod.subtitle}</p>
-                <div className="flex justify-between items-center mt-auto">
-                  <span className="text-sm font-bold text-slate-400">{mod.activities.length} Actividades</span>
-                  <div className={`p-2 rounded-full text-white ${mod.color} group-hover:scale-110 transition-transform`}>
-                    <Play size={20} fill="currentColor" />
-                  </div>
-                </div>
-              </button>
-            ))}
-
-            {/* Modo Práctica Infinita */}
-            <button
-              onClick={startInfiniteMode}
-              className="group relative bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 text-left overflow-hidden flex flex-col h-full"
-            >
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Zap size={80} className="text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mt-2 mb-2 flex items-center gap-2">
-                <Zap size={24} className="text-yellow-400" />
-                Maratón Infinito
-              </h3>
-              <p className="text-slate-300 text-sm mb-6 flex-grow">
-                Repaso general de todos los temas. Ideal para extender la clase todo el tiempo necesario.
-              </p>
-              <div className="flex justify-between items-center mt-auto">
-                <span className="text-sm font-bold text-yellow-400">Preguntas Ilimitadas</span>
-                <div className="p-2 rounded-full bg-yellow-400 text-slate-900 group-hover:scale-110 transition-transform">
-                  <Play size={20} fill="currentColor" />
-                </div>
-              </div>
-            </button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (currentScreen === 'endModule') {
-    const mod = curriculum[currentModuleIndex];
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-        <div className="bg-white p-10 rounded-3xl shadow-xl max-w-lg w-full text-center border border-slate-100">
-          <div className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-6 text-white ${mod.color}`}>
-            <Trophy size={48} />
-          </div>
-          <h2 className="text-3xl font-black text-slate-800 mb-2">¡Nivel Completado!</h2>
-          <p className="text-slate-500 mb-8 font-medium">Has superado con éxito las actividades de {mod.title}.</p>
-          
-          <div className="bg-slate-50 rounded-2xl p-6 mb-8 flex justify-around">
-            <div>
-              <p className="text-sm text-slate-400 font-bold mb-1">Puntos Ganados</p>
-              <p className="text-2xl font-black text-yellow-500 flex items-center justify-center gap-1">
-                <Star fill="currentColor" size={20}/> +{mod.activities.length * 100}
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={returnToMenu}
-            className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all hover:opacity-90 shadow-lg ${mod.color}`}
-          >
-            Volver al Menú Principal
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Vista de Actividad (Modulo o Infinito)
-  const isInfinite = currentScreen === 'infinite';
-  const activityData = isInfinite 
-    ? infiniteQuestions[currentActivityIndex % infiniteQuestions.length] 
-    : curriculum[currentModuleIndex].activities[currentActivityIndex];
-  
-  const currentModuleTitle = isInfinite ? `Maratón: ${activityData.levelName}` : curriculum[currentModuleIndex].title;
-  const progressPercent = isInfinite 
-    ? 100 
-    : ((currentActivityIndex) / curriculum[currentModuleIndex].activities.length) * 100;
-
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      {/* Navbar Actividad */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-10 px-4 py-3 flex justify-between items-center">
-        <button onClick={returnToMenu} className="text-slate-400 hover:text-slate-600 p-2">
-          <XCircle size={28} />
-        </button>
-        <div className="flex-1 px-8">
-          {!isInfinite && (
-            <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-              <div 
-                className="bg-blue-500 h-full transition-all duration-500 ease-out"
-                style={{ width: `${progressPercent}%` }}
-              ></div>
-            </div>
-          )}
-          {isInfinite && (
-             <div className="text-center font-bold text-slate-500">
-               Pregunta {currentActivityIndex + 1}
-             </div>
-          )}
-        </div>
-        <div className="font-black text-lg text-slate-800 flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg">
-          <Star size={18} fill="currentColor"/> {score}
-        </div>
-      </header>
-
-      {/* Contenido Principal */}
-      <main className="flex-grow flex flex-col items-center justify-center p-6 max-w-4xl mx-auto w-full">
-        <div className="w-full bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-10">
-          <div className="mb-8 text-center">
-            <span className="inline-block px-4 py-1 bg-slate-100 text-slate-500 rounded-full text-sm font-bold mb-4 uppercase tracking-wider">
-              {currentModuleTitle}
-            </span>
-          </div>
-
-          <div key={`${currentModuleIndex}-${currentActivityIndex}`} className="animate-fade-in">
-            {activityData.type === 'matching' && (
-              <MatchingGame activity={activityData} onComplete={handleActivityComplete} />
-            )}
-            {activityData.type === 'fill-blank' && (
-              <FillBlankGame activity={activityData} onComplete={handleActivityComplete} />
-            )}
-          </div>
-        </div>
-      </main>
-
-      {/* Estilos globales para animaciones */}
-      <style dangerouslySetInnerHTML={{__html: `
+    <style>
         @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px) rotate(-1deg); }
-          75% { transform: translateX(5px) rotate(1deg); }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-1deg); }
+            75% { transform: translateX(5px) rotate(1deg); }
         }
         .animate-shake {
-          animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
         }
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in {
-          animation: fade-in 0.5s ease-out forwards;
+            animation: fade-in 0.5s ease-out forwards;
         }
-      `}} />
-    </div>
-  );
-}
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Contenedor donde React renderizará la aplicación -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ICONOS SVG INCORPORADOS (Reemplazan a lucide-react para no tener dependencias externas) ---
+        const PlayIcon = ({ className }) => <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
+        const XCircleIcon = ({ className }) => <svg className={className} width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>;
+        const AwardIcon = ({ className }) => <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>;
+        const ClockIcon = ({ className }) => <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
+        const BookOpenIcon = ({ className }) => <svg className={className} width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>;
+        const ZapIcon = ({ className, size = 24 }) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
+        const TrophyIcon = ({ className, size = 48 }) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>;
+        const StarIcon = ({ className, size = 20 }) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
+
+        // --- BASE DE DATOS DE CONTENIDO (CURRICULUM) ---
+        const curriculum = [
+            {
+                id: 'g1-3',
+                title: 'Grados 1º a 3º - Exploradores',
+                subtitle: 'Vocabulario básico, saludos, colores y animales.',
+                color: 'bg-blue-500',
+                activities: [
+                    { type: 'matching', instruction: 'Une la palabra en inglés con su significado en español.', pairs: [{ en: 'Hello', es: 'Hola' }, { en: 'Red', es: 'Rojo' }, { en: 'Dog', es: 'Perro' }, { en: 'Cat', es: 'Gato' }, { en: 'Apple', es: 'Manzana' }] },
+                    { type: 'fill-blank', instruction: 'Selecciona la palabra correcta para completar la frase.', sentence: 'Good _, teacher!', options: ['morning', 'night', 'moon', 'sun'], correct: 'morning' },
+                    { type: 'matching', instruction: 'Une los números.', pairs: [{ en: 'One', es: 'Uno' }, { en: 'Two', es: 'Dos' }, { en: 'Three', es: 'Tres' }, { en: 'Four', es: 'Cuatro' }, { en: 'Five', es: 'Cinco' }] }
+                ]
+            },
+            {
+                id: 'g4-5',
+                title: 'Grados 4º a 5º - Principiantes',
+                subtitle: 'Verbo To Be, rutinas, familia y partes del cuerpo.',
+                color: 'bg-green-500',
+                activities: [
+                    { type: 'fill-blank', instruction: 'Completa con el Verbo To Be correcto.', sentence: 'She _ my sister.', options: ['am', 'is', 'are', 'be'], correct: 'is' },
+                    { type: 'fill-blank', instruction: 'Rutinas diarias: Completa la frase.', sentence: 'I _ breakfast at 7:00 AM.', options: ['eat', 'play', 'sleep', 'go'], correct: 'eat' },
+                    { type: 'matching', instruction: 'Relaciona la palabra de la familia.', pairs: [{ en: 'Mother', es: 'Madre' }, { en: 'Father', es: 'Padre' }, { en: 'Brother', es: 'Hermano' }, { en: 'Sister', es: 'Hermana' }, { en: 'Grandfather', es: 'Abuelo' }] }
+                ]
+            },
+            {
+                id: 'g6-7',
+                title: 'Grados 6º a 7º - Intermedios',
+                subtitle: 'Pasado simple, futuro (will/going to), comparativos.',
+                color: 'bg-yellow-500',
+                activities: [
+                    { type: 'matching', instruction: 'Une el verbo en presente con su forma en pasado (Irregulares).', pairs: [{ en: 'Go', es: 'Went' }, { en: 'See', es: 'Saw' }, { en: 'Eat', es: 'Ate' }, { en: 'Buy', es: 'Bought' }, { en: 'Think', es: 'Thought' }] },
+                    { type: 'fill-blank', instruction: 'Completa usando el comparativo correcto.', sentence: 'My car is _ than yours.', options: ['fast', 'faster', 'fastest', 'more fast'], correct: 'faster' },
+                    { type: 'fill-blank', instruction: 'Completa la frase en futuro.', sentence: 'Tomorrow, I _ to the beach.', options: ['will go', 'went', 'going', 'goes'], correct: 'will go' }
+                ]
+            },
+            {
+                id: 'g8-9',
+                title: 'Grados 8º a 9º - Avanzados',
+                subtitle: 'Presente perfecto, condicionales, modales.',
+                color: 'bg-orange-500',
+                activities: [
+                    { type: 'fill-blank', instruction: 'Completa con Presente Perfecto.', sentence: 'I have never _ to Paris.', options: ['be', 'was', 'been', 'being'], correct: 'been' },
+                    { type: 'fill-blank', instruction: 'Primer Condicional: Completa.', sentence: 'If it rains, we _ at home.', options: ['stay', 'will stay', 'stayed', 'staying'], correct: 'will stay' },
+                    { type: 'matching', instruction: 'Relaciona el verbo modal con su uso.', pairs: [{ en: 'Must', es: 'Obligación fuerte' }, { en: 'Should', es: 'Consejo' }, { en: 'Can', es: 'Habilidad' }, { en: 'May', es: 'Permiso/Posibilidad' }, { en: 'Might', es: 'Posibilidad remota' }] }
+                ]
+            },
+            {
+                id: 'g10-11',
+                title: 'Grados 10º a 11º - Expertos',
+                subtitle: 'Voz pasiva, Reported Speech, Phrasal Verbs.',
+                color: 'bg-purple-600',
+                activities: [
+                    { type: 'matching', instruction: 'Une el Phrasal Verb con su significado.', pairs: [{ en: 'Give up', es: 'Rendirse' }, { en: 'Look for', es: 'Buscar' }, { en: 'Take off', es: 'Despegar / Quitarse' }, { en: 'Wake up', es: 'Despertarse' }, { en: 'Turn on', es: 'Encender' }] },
+                    { type: 'fill-blank', instruction: 'Voz Pasiva: Completa la frase.', sentence: 'The book _ written by Gabriel Garcia Marquez.', options: ['was', 'is', 'has', 'were'], correct: 'was' },
+                    { type: 'fill-blank', instruction: 'Tercer Condicional (Third Conditional).', sentence: 'If I had studied harder, I _ passed the exam.', options: ['would have', 'will have', 'had', 'would'], correct: 'would have' }
+                ]
+            }
+        ];
+
+        // --- LÓGICA DEL JUEGO ---
+        const generateInfiniteQuestions = () => {
+            let allQuestions = [];
+            curriculum.forEach(level => {
+                level.activities.forEach(act => {
+                    if (act.type === 'fill-blank') {
+                        allQuestions.push({...act, levelName: level.title});
+                    } else if (act.type === 'matching') {
+                        act.pairs.forEach(pair => {
+                            let wrongOptions = act.pairs.filter(p => p.en !== pair.en).map(p => p.es).slice(0,3);
+                            allQuestions.push({
+                                type: 'fill-blank',
+                                instruction: `¿Qué significa "${pair.en}"?`,
+                                sentence: `"${pair.en}" significa _`,
+                                options: [pair.es, ...wrongOptions].sort(() => Math.random() - 0.5),
+                                correct: pair.es,
+                                levelName: level.title
+                            });
+                        });
+                    }
+                });
+            });
+            return allQuestions.sort(() => Math.random() - 0.5);
+        };
+
+        const MatchingGame = ({ activity, onComplete }) => {
+            const [leftItems, setLeftItems] = useState([]);
+            const [rightItems, setRightItems] = useState([]);
+            const [selectedLeft, setSelectedLeft] = useState(null);
+            const [selectedRight, setSelectedRight] = useState(null);
+            const [matched, setMatched] = useState([]);
+            const [errorFlash, setErrorFlash] = useState(false);
+
+            useEffect(() => {
+                setLeftItems([...activity.pairs].sort(() => Math.random() - 0.5));
+                setRightItems([...activity.pairs].sort(() => Math.random() - 0.5));
+                setMatched([]);
+                setSelectedLeft(null);
+                setSelectedRight(null);
+            }, [activity]);
+
+            const handleSelectLeft = (item) => {
+                if (matched.includes(item.en)) return;
+                setSelectedLeft(item);
+                checkMatch(item, selectedRight);
+            };
+
+            const handleSelectRight = (item) => {
+                if (matched.find(m => m === activity.pairs.find(p => p.es === item.es).en)) return;
+                setSelectedRight(item);
+                checkMatch(selectedLeft, item);
+            };
+
+            const checkMatch = (left, right) => {
+                if (left && right) {
+                    const isCorrect = activity.pairs.some(p => p.en === left.en && p.es === right.es);
+                    if (isCorrect) {
+                        setMatched(prev => [...prev, left.en]);
+                        setSelectedLeft(null);
+                        setSelectedRight(null);
+                        if (matched.length + 1 === activity.pairs.length) {
+                            setTimeout(onComplete, 1000);
+                        }
+                    } else {
+                        setErrorFlash(true);
+                        setTimeout(() => {
+                            setSelectedLeft(null);
+                            setSelectedRight(null);
+                            setErrorFlash(false);
+                        }, 800);
+                    }
+                }
+            };
+
+            return (
+                <div className="w-full flex flex-col items-center">
+                    <p className="text-lg text-slate-600 mb-6 font-medium text-center">{activity.instruction}</p>
+                    <div className={`flex w-full justify-between gap-4 transition-all ${errorFlash ? 'animate-shake' : ''}`}>
+                        <div className="flex-1 flex flex-col gap-3">
+                            {leftItems.map((item, idx) => {
+                                const isMatched = matched.includes(item.en);
+                                const isSelected = selectedLeft?.en === item.en;
+                                return (
+                                    <button key={`l-${idx}`} onClick={() => handleSelectLeft(item)} disabled={isMatched}
+                                        className={`p-4 rounded-xl text-center font-bold text-lg transition-all duration-300 shadow-sm border-2
+                                        ${isMatched ? 'bg-green-100 border-green-500 text-green-700 opacity-50 scale-95' 
+                                        : isSelected ? 'bg-blue-100 border-blue-500 text-blue-700 scale-105 shadow-md' 
+                                        : 'bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-slate-50'}`}>
+                                        {item.en}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                        <div className="flex-1 flex flex-col gap-3">
+                            {rightItems.map((item, idx) => {
+                                const engWord = activity.pairs.find(p => p.es === item.es).en;
+                                const isMatched = matched.includes(engWord);
+                                const isSelected = selectedRight?.es === item.es;
+                                return (
+                                    <button key={`r-${idx}`} onClick={() => handleSelectRight(item)} disabled={isMatched}
+                                        className={`p-4 rounded-xl text-center font-bold text-lg transition-all duration-300 shadow-sm border-2
+                                        ${isMatched ? 'bg-green-100 border-green-500 text-green-700 opacity-50 scale-95' 
+                                        : isSelected ? 'bg-purple-100 border-purple-500 text-purple-700 scale-105 shadow-md' 
+                                        : 'bg-white border-slate-200 text-slate-700 hover:border-purple-300 hover:bg-slate-50'}`}>
+                                        {item.es}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const FillBlankGame = ({ activity, onComplete }) => {
+            const [selectedWord, setSelectedWord] = useState(null);
+            const [isCorrect, setIsCorrect] = useState(null);
+            const [shuffledOptions, setShuffledOptions] = useState([]);
+
+            useEffect(() => {
+                setShuffledOptions([...activity.options].sort(() => Math.random() - 0.5));
+                setSelectedWord(null);
+                setIsCorrect(null);
+            }, [activity]);
+
+            const handleSelectWord = (word) => {
+                setSelectedWord(word);
+                if (word === activity.correct) {
+                    setIsCorrect(true);
+                    setTimeout(onComplete, 1500);
+                } else {
+                    setIsCorrect(false);
+                    setTimeout(() => {
+                        setSelectedWord(null);
+                        setIsCorrect(null);
+                    }, 1000);
+                }
+            };
+
+            const parts = activity.sentence.split('_');
+
+            return (
+                <div className="w-full flex flex-col items-center">
+                    <p className="text-lg text-slate-600 mb-8 font-medium text-center">{activity.instruction}</p>
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 w-full mb-8 text-center">
+                        <p className="text-2xl font-bold text-slate-800 leading-relaxed flex items-center justify-center flex-wrap gap-2">
+                            {parts[0]}
+                            <span className={`inline-block min-w-[120px] px-4 py-2 border-b-4 rounded-lg mx-2 transition-all duration-300
+                                ${selectedWord === null ? 'border-slate-300 bg-slate-50 text-slate-300' : 
+                                isCorrect ? 'border-green-500 bg-green-100 text-green-700' : 
+                                isCorrect === false ? 'border-red-500 bg-red-100 text-red-700 animate-shake' : 
+                                'border-blue-500 bg-blue-50 text-blue-700'}`}>
+                                {selectedWord || '?'}
+                            </span>
+                            {parts[1]}
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+                        {shuffledOptions.map((opt, idx) => (
+                            <button key={idx} onClick={() => handleSelectWord(opt)} disabled={isCorrect}
+                                className={`py-4 px-2 rounded-xl font-bold text-lg transition-all shadow-sm border-2
+                                ${selectedWord === opt 
+                                    ? (isCorrect ? 'bg-green-500 text-white border-green-600 scale-105' : 'bg-red-500 text-white border-red-600')
+                                    : 'bg-white border-slate-200 text-slate-700 hover:border-blue-400 hover:text-blue-600 hover:-translate-y-1'}`}>
+                                {opt}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [currentScreen, setCurrentScreen] = useState('menu');
+            const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
+            const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
+            const [score, setScore] = useState(0);
+            const [timeElapsed, setTimeElapsed] = useState(0);
+            const [infiniteQuestions, setInfiniteQuestions] = useState([]);
+            
+            useEffect(() => {
+                const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
+                return () => clearInterval(timer);
+            }, []);
+
+            const formatTime = (seconds) => {
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            };
+
+            const startModule = (index) => {
+                setCurrentModuleIndex(index);
+                setCurrentActivityIndex(0);
+                setCurrentScreen('module');
+            };
+
+            const startInfiniteMode = () => {
+                setInfiniteQuestions(generateInfiniteQuestions());
+                setCurrentActivityIndex(0);
+                setCurrentScreen('infinite');
+            };
+
+            const handleActivityComplete = () => {
+                setScore(prev => prev + 100);
+                if (currentScreen === 'module') {
+                    const currentModule = curriculum[currentModuleIndex];
+                    if (currentActivityIndex + 1 < currentModule.activities.length) {
+                        setCurrentActivityIndex(prev => prev + 1);
+                    } else {
+                        setCurrentScreen('endModule');
+                    }
+                } else if (currentScreen === 'infinite') {
+                    setCurrentActivityIndex(prev => prev + 1);
+                }
+            };
+
+            if (currentScreen === 'menu') {
+                return (
+                    <div className="min-h-screen p-6 font-sans">
+                        <header className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+                            <div>
+                                <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-2">
+                                    <BookOpenIcon className="text-blue-600" />
+                                    English Master Journey
+                                </h1>
+                                <p className="text-slate-500 font-medium mt-1">Currículo Completo: Primaria a Bachillerato</p>
+                            </div>
+                            <div className="flex gap-4">
+                                <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 flex items-center gap-2 font-bold text-slate-700">
+                                    <AwardIcon className="text-yellow-500" />
+                                    {score} Pts
+                                </div>
+                                <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 flex items-center gap-2 font-bold text-slate-700">
+                                    <ClockIcon className="text-blue-500" />
+                                    {formatTime(timeElapsed)}
+                                </div>
+                            </div>
+                        </header>
+
+                        <main className="max-w-4xl mx-auto">
+                            <h2 className="text-xl font-bold text-slate-700 mb-6">Selecciona el nivel a impartir:</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {curriculum.map((mod, idx) => (
+                                    <button key={mod.id} onClick={() => startModule(idx)}
+                                        className="group relative bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 text-left overflow-hidden flex flex-col h-full">
+                                        <div className={`absolute top-0 left-0 w-full h-2 ${mod.color}`}></div>
+                                        <h3 className="text-xl font-bold text-slate-800 mt-2 mb-2">{mod.title}</h3>
+                                        <p className="text-slate-500 text-sm mb-6 flex-grow">{mod.subtitle}</p>
+                                        <div className="flex justify-between items-center mt-auto">
+                                            <span className="text-sm font-bold text-slate-400">{mod.activities.length} Actividades</span>
+                                            <div className={`p-2 rounded-full text-white ${mod.color} group-hover:scale-110 transition-transform`}>
+                                                <PlayIcon className="w-5 h-5" />
+                                            </div>
+                                        </div>
+                                    </button>
+                                ))}
+
+                                <button onClick={startInfiniteMode}
+                                    className="group relative bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2 text-left overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                                        <ZapIcon size={80} className="text-white" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mt-2 mb-2 flex items-center gap-2">
+                                        <ZapIcon size={24} className="text-yellow-400" /> Maratón Infinito
+                                    </h3>
+                                    <p className="text-slate-300 text-sm mb-6 flex-grow">Repaso general de todos los temas. Ideal para extender la clase.</p>
+                                    <div className="flex justify-between items-center mt-auto">
+                                        <span className="text-sm font-bold text-yellow-400">Preguntas Ilimitadas</span>
+                                        <div className="p-2 rounded-full bg-yellow-400 text-slate-900 group-hover:scale-110 transition-transform">
+                                            <PlayIcon className="w-5 h-5" />
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </main>
+                    </div>
+                );
+            }
+
+            if (currentScreen === 'endModule') {
+                const mod = curriculum[currentModuleIndex];
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-6 font-sans">
+                        <div className="bg-white p-10 rounded-3xl shadow-xl max-w-lg w-full text-center border border-slate-100">
+                            <div className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-6 text-white ${mod.color}`}>
+                                <TrophyIcon size={48} />
+                            </div>
+                            <h2 className="text-3xl font-black text-slate-800 mb-2">¡Nivel Completado!</h2>
+                            <p className="text-slate-500 mb-8 font-medium">Has superado con éxito las actividades de {mod.title}.</p>
+                            <div className="bg-slate-50 rounded-2xl p-6 mb-8 flex justify-around">
+                                <div>
+                                    <p className="text-sm text-slate-400 font-bold mb-1">Puntos Ganados</p>
+                                    <p className="text-2xl font-black text-yellow-500 flex items-center justify-center gap-1">
+                                        <StarIcon size={20} /> +{mod.activities.length * 100}
+                                    </p>
+                                </div>
+                            </div>
+                            <button onClick={() => setCurrentScreen('menu')}
+                                className={`w-full py-4 rounded-xl text-white font-bold text-lg transition-all hover:opacity-90 shadow-lg ${mod.color}`}>
+                                Volver al Menú Principal
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            const isInfinite = currentScreen === 'infinite';
+            const activityData = isInfinite ? infiniteQuestions[currentActivityIndex % infiniteQuestions.length] : curriculum[currentModuleIndex].activities[currentActivityIndex];
+            const currentModuleTitle = isInfinite ? `Maratón: ${activityData.levelName}` : curriculum[currentModuleIndex].title;
+            const progressPercent = isInfinite ? 100 : ((currentActivityIndex) / curriculum[currentModuleIndex].activities.length) * 100;
+
+            return (
+                <div className="min-h-screen flex flex-col font-sans">
+                    <header className="bg-white border-b border-slate-200 sticky top-0 z-10 px-4 py-3 flex justify-between items-center">
+                        <button onClick={() => setCurrentScreen('menu')} className="text-slate-400 hover:text-slate-600 p-2">
+                            <XCircleIcon className="w-7 h-7" />
+                        </button>
+                        <div className="flex-1 px-8">
+                            {!isInfinite && (
+                                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                    <div className="bg-blue-500 h-full transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }}></div>
+                                </div>
+                            )}
+                            {isInfinite && <div className="text-center font-bold text-slate-500">Pregunta {currentActivityIndex + 1}</div>}
+                        </div>
+                        <div className="font-black text-lg text-slate-800 flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg">
+                            <StarIcon size={18} /> {score}
+                        </div>
+                    </header>
+                    <main className="flex-grow flex flex-col items-center justify-center p-6 max-w-4xl mx-auto w-full">
+                        <div className="w-full bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-10">
+                            <div className="mb-8 text-center">
+                                <span className="inline-block px-4 py-1 bg-slate-100 text-slate-500 rounded-full text-sm font-bold mb-4 uppercase tracking-wider">
+                                    {currentModuleTitle}
+                                </span>
+                            </div>
+                            <div key={`${currentModuleIndex}-${currentActivityIndex}`} className="animate-fade-in">
+                                {activityData.type === 'matching' && <MatchingGame activity={activityData} onComplete={handleActivityComplete} />}
+                                {activityData.type === 'fill-blank' && <FillBlankGame activity={activityData} onComplete={handleActivityComplete} />}
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        // Renderizar la app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
