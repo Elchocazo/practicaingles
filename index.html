@@ -50,61 +50,61 @@
         const TrophyIcon = ({ className, size = 48 }) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>;
         const StarIcon = ({ className, size = 20 }) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>;
 
-        // --- BASE DE DATOS DE CONTENIDO (CURRICULUM) ---
+        // --- BASE DE DATOS DE CONTENIDO (CURRICULUM EXTREMO +110% DIFICULTAD) ---
         const curriculum = [
             {
                 id: 'g1-3',
                 title: 'Grados 1º a 3º - Exploradores',
-                subtitle: 'Vocabulario básico, saludos, colores y animales.',
+                subtitle: 'Oraciones complejas, preposiciones y presente continuo.',
                 color: 'bg-blue-500',
                 activities: [
-                    { type: 'matching', instruction: 'Une la palabra en inglés con su significado en español.', pairs: [{ en: 'Hello', es: 'Hola' }, { en: 'Red', es: 'Rojo' }, { en: 'Dog', es: 'Perro' }, { en: 'Cat', es: 'Gato' }, { en: 'Apple', es: 'Manzana' }] },
-                    { type: 'fill-blank', instruction: 'Selecciona la palabra correcta para completar la frase.', sentence: 'Good _, teacher!', options: ['morning', 'night', 'moon', 'sun'], correct: 'morning' },
-                    { type: 'matching', instruction: 'Une los números.', pairs: [{ en: 'One', es: 'Uno' }, { en: 'Two', es: 'Dos' }, { en: 'Three', es: 'Tres' }, { en: 'Four', es: 'Cuatro' }, { en: 'Five', es: 'Cinco' }] }
+                    { type: 'matching', instruction: 'Une la frase en inglés con su significado en español.', pairs: [{ en: 'Good afternoon', es: 'Buenas tardes' }, { en: 'How are you?', es: '¿Cómo estás?' }, { en: 'Wednesday', es: 'Miércoles' }, { en: 'Shoulders', es: 'Hombros' }, { en: 'Thirteen', es: 'Trece' }] },
+                    { type: 'fill-blank', instruction: 'Selecciona la preposición correcta para la frase.', sentence: 'The cat is sleeping _ the table.', options: ['under', 'on', 'in', 'at'], correct: 'under' },
+                    { type: 'matching', instruction: 'Une las acciones (Presente Continuo).', pairs: [{ en: 'I am reading', es: 'Estoy leyendo' }, { en: 'She is eating', es: 'Ella está comiendo' }, { en: 'They are playing', es: 'Ellos están jugando' }, { en: 'We are running', es: 'Nosotros estamos corriendo' }, { en: 'He is sleeping', es: 'Él está durmiendo' }] }
                 ]
             },
             {
                 id: 'g4-5',
                 title: 'Grados 4º a 5º - Principiantes',
-                subtitle: 'Verbo To Be, rutinas, familia y partes del cuerpo.',
+                subtitle: 'Pasado continuo, verbos irregulares y ubicaciones.',
                 color: 'bg-green-500',
                 activities: [
-                    { type: 'fill-blank', instruction: 'Completa con el Verbo To Be correcto.', sentence: 'She _ my sister.', options: ['am', 'is', 'are', 'be'], correct: 'is' },
-                    { type: 'fill-blank', instruction: 'Rutinas diarias: Completa la frase.', sentence: 'I _ breakfast at 7:00 AM.', options: ['eat', 'play', 'sleep', 'go'], correct: 'eat' },
-                    { type: 'matching', instruction: 'Relaciona la palabra de la familia.', pairs: [{ en: 'Mother', es: 'Madre' }, { en: 'Father', es: 'Padre' }, { en: 'Brother', es: 'Hermano' }, { en: 'Sister', es: 'Hermana' }, { en: 'Grandfather', es: 'Abuelo' }] }
+                    { type: 'fill-blank', instruction: 'Completa con el verbo en Pasado Simple.', sentence: 'Yesterday, I _ to the cinema with my friends.', options: ['went', 'go', 'going', 'goed'], correct: 'went' },
+                    { type: 'fill-blank', instruction: 'Completa con el auxiliar correcto en Pasado Continuo.', sentence: 'While I was studying, my brothers _ playing video games.', options: ['were', 'was', 'are', 'is'], correct: 'were' },
+                    { type: 'matching', instruction: 'Relaciona el vocabulario de lugares y direcciones.', pairs: [{ en: 'Behind', es: 'Detrás de' }, { en: 'Between', es: 'Entre' }, { en: 'Town hall', es: 'Ayuntamiento' }, { en: 'Straight ahead', es: 'Todo recto' }, { en: 'Crossroads', es: 'Cruce / Intersección' }] }
                 ]
             },
             {
                 id: 'g6-7',
                 title: 'Grados 6º a 7º - Intermedios',
-                subtitle: 'Pasado simple, futuro (will/going to), comparativos.',
+                subtitle: 'Participios avanzados, superlativos complejos y tiempos perfectos.',
                 color: 'bg-yellow-500',
                 activities: [
-                    { type: 'matching', instruction: 'Une el verbo en presente con su forma en pasado (Irregulares).', pairs: [{ en: 'Go', es: 'Went' }, { en: 'See', es: 'Saw' }, { en: 'Eat', es: 'Ate' }, { en: 'Buy', es: 'Bought' }, { en: 'Think', es: 'Thought' }] },
-                    { type: 'fill-blank', instruction: 'Completa usando el comparativo correcto.', sentence: 'My car is _ than yours.', options: ['fast', 'faster', 'fastest', 'more fast'], correct: 'faster' },
-                    { type: 'fill-blank', instruction: 'Completa la frase en futuro.', sentence: 'Tomorrow, I _ to the beach.', options: ['will go', 'went', 'going', 'goes'], correct: 'will go' }
+                    { type: 'matching', instruction: 'Une el verbo con su participio pasado (Irregulares Avanzados).', pairs: [{ en: 'Hide', es: 'Hidden' }, { en: 'Tear', es: 'Torn' }, { en: 'Throw', es: 'Thrown' }, { en: 'Wear', es: 'Worn' }, { en: 'Forgive', es: 'Forgiven' }] },
+                    { type: 'fill-blank', instruction: 'Completa usando el superlativo o comparativo correcto.', sentence: 'This is absolutely the _ fascinating documentary I have ever watched.', options: ['most', 'more', 'much', 'very'], correct: 'most' },
+                    { type: 'fill-blank', instruction: 'Tiempos perfectos: Completa la frase.', sentence: 'She has been _ for three hours without a break.', options: ['studying', 'studied', 'study', 'studies'], correct: 'studying' }
                 ]
             },
             {
                 id: 'g8-9',
                 title: 'Grados 8º a 9º - Avanzados',
-                subtitle: 'Presente perfecto, condicionales, modales.',
+                subtitle: 'Tercer condicional, Relative Clauses y Phrasal Verbs B2.',
                 color: 'bg-orange-500',
                 activities: [
-                    { type: 'fill-blank', instruction: 'Completa con Presente Perfecto.', sentence: 'I have never _ to Paris.', options: ['be', 'was', 'been', 'being'], correct: 'been' },
-                    { type: 'fill-blank', instruction: 'Primer Condicional: Completa.', sentence: 'If it rains, we _ at home.', options: ['stay', 'will stay', 'stayed', 'staying'], correct: 'will stay' },
-                    { type: 'matching', instruction: 'Relaciona el verbo modal con su uso.', pairs: [{ en: 'Must', es: 'Obligación fuerte' }, { en: 'Should', es: 'Consejo' }, { en: 'Can', es: 'Habilidad' }, { en: 'May', es: 'Permiso/Posibilidad' }, { en: 'Might', es: 'Posibilidad remota' }] }
+                    { type: 'fill-blank', instruction: 'Tercer Condicional (Third Conditional).', sentence: 'If I had known you were coming, I _ a cake.', options: ['would have baked', 'will bake', 'baked', 'would bake'], correct: 'would have baked' },
+                    { type: 'fill-blank', instruction: 'Relative Clauses: Selecciona el pronombre correcto.', sentence: 'The scientist _ research won the Nobel Prize is speaking today.', options: ['whose', 'who', 'whom', 'which'], correct: 'whose' },
+                    { type: 'matching', instruction: 'Relaciona el Phrasal Verb (Nivel B2/C1) con su significado.', pairs: [{ en: 'Put off', es: 'Posponer' }, { en: 'Call off', es: 'Cancelar' }, { en: 'Look forward to', es: 'Esperar con ansias' }, { en: 'Bring up', es: 'Mencionar (un tema)' }, { en: 'Run out of', es: 'Quedarse sin' }] }
                 ]
             },
             {
                 id: 'g10-11',
                 title: 'Grados 10º a 11º - Expertos',
-                subtitle: 'Voz pasiva, Reported Speech, Phrasal Verbs.',
+                subtitle: 'Inversiones gramaticales, Condicionales mixtos e Idioms C1/C2.',
                 color: 'bg-purple-600',
                 activities: [
-                    { type: 'matching', instruction: 'Une el Phrasal Verb con su significado.', pairs: [{ en: 'Give up', es: 'Rendirse' }, { en: 'Look for', es: 'Buscar' }, { en: 'Take off', es: 'Despegar / Quitarse' }, { en: 'Wake up', es: 'Despertarse' }, { en: 'Turn on', es: 'Encender' }] },
-                    { type: 'fill-blank', instruction: 'Voz Pasiva: Completa la frase.', sentence: 'The book _ written by Gabriel Garcia Marquez.', options: ['was', 'is', 'has', 'were'], correct: 'was' },
-                    { type: 'fill-blank', instruction: 'Tercer Condicional (Third Conditional).', sentence: 'If I had studied harder, I _ passed the exam.', options: ['would have', 'will have', 'had', 'would'], correct: 'would have' }
+                    { type: 'matching', instruction: 'Relaciona los Modismos (Idioms) y vocabulario C1/C2.', pairs: [{ en: 'A blessing in disguise', es: 'Un mal que por bien no venga' }, { en: 'Bite the bullet', es: 'Afrontar la situación' }, { en: 'Devil\'s advocate', es: 'Abogado del diablo' }, { en: 'Overwhelming', es: 'Abrumador' }, { en: 'Flawless', es: 'Impecable' }] },
+                    { type: 'fill-blank', instruction: 'Estructuras de Inversión (Inversion).', sentence: 'Seldom _ such a breathtaking performance in this theater.', options: ['have I seen', 'I have seen', 'I saw', 'did I saw'], correct: 'have I seen' },
+                    { type: 'fill-blank', instruction: 'Condicional Mixto (Mixed Conditional).', sentence: 'If she had taken the medication yesterday, she _ feeling better right now.', options: ['would be', 'would have been', 'will be', 'is'], correct: 'would be' }
                 ]
             }
         ];
